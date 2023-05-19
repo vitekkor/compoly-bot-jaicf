@@ -11,7 +11,7 @@ class PingCommand : BaseCommand() {
     override val description: String = "Pong!"
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
         activators {
-            regex("/(пинг)|(pong)")
+            commandActivator("пинг", "ping")
         }
         action {
             reactions.say("Pong!")

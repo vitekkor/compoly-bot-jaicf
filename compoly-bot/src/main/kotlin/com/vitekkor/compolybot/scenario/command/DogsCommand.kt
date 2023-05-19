@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class DogsCommand(private val ktorClient: HttpClient) : BaseCommand() {
-    override val name: String = "котик"
-    override val description: String = "КОТИКИ!"
+    override val name: String = "пёсик"
+    override val description: String = "ПЁСИКИ!"
 
     private val catApiLink = "https://dog.ceo/api/breeds/image/random"
 
@@ -20,11 +20,11 @@ class DogsCommand(private val ktorClient: HttpClient) : BaseCommand() {
             "size=257x307&quality=96&sign=a9f6943997073aa917da6350453f2c3c&type=album"
 
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
-        activators { regex("/(пёсик)(песик)|(dog).*") }
+        activators { commandActivator("пёсик", "песик", "dog") }
         action {
             val catImage = runBlocking {
                 kotlin.runCatching {
-                    ktorClient.get<List<DogApiResponse>>(catApiLink).firstOrNull()?.message
+                    ktorClient.get<DogApiResponse>(catApiLink).message
                 }.getOrNull() ?: noImage
             }
             reactions.image(catImage)

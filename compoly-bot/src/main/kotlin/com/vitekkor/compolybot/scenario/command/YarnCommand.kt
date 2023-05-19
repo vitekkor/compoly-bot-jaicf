@@ -10,7 +10,7 @@ import kotlin.random.Random
 
 @Component
 class YarnCommand : BaseCommand() {
-    override val name: String = "Нить"
+    override val name: String = "нить"
     override val description: String = "Да найдите же ее кто-нибудь"
 
     private val notEnoughMessage =
@@ -18,7 +18,7 @@ class YarnCommand : BaseCommand() {
     private var probability = 0
 
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
-        activators { regex("/(нить)|(yarn).*") }
+        activators { commandActivator("нить", "yarn") }
         action {
             probability++
             val delay = 3000L
