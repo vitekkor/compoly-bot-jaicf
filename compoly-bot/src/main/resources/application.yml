@@ -8,6 +8,9 @@ spring:
 bot:
   telegramToken:
 
+cat-api:
+  apiKey:
+
 
 logging:
   file:
