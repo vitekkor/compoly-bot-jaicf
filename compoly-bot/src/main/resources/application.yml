@@ -5,6 +5,10 @@ spring:
   application:
     name: compolybot
 
+bot:
+  telegramToken:
+
+
 logging:
   file:
     name: ${log.dir:/tmp}/compolybot.main.log
