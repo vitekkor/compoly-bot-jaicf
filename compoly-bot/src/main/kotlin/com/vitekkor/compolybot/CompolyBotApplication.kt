@@ -14,6 +14,7 @@ object Dev {
     @JvmStatic
     fun main(args: Array<String>) {
         System.setProperty("spring.profiles.active", "dev")
+        System.setProperty("log.dir", "compoly-bot/logs")
         com.vitekkor.compolybot.main(args)
     }
 }
