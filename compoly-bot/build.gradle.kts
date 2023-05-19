@@ -12,18 +12,18 @@ val jaicf = "1.3.0"
 
 dependencies {
     implementation("com.just-ai.jaicf:core:$jaicf")
-    implementation("com.just-ai.jaicf:mongo:$jaicf")
+    // implementation("com.just-ai.jaicf:mongo:$jaicf")
     implementation("com.just-ai.jaicf:jaicp:$jaicf")
     implementation("com.just-ai.jaicf:telegram:$jaicf")
-    implementation("com.just-ai.jaicf:caila:$jaicf")
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    // implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("io.ktor:ktor-client-serialization:1.5.1")
     runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.8.0")
 
     testImplementation(kotlin("test"))
