@@ -3,12 +3,9 @@ package com.vitekkor.compolybot.scenario.extension
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.api.BotRequestType
 import com.justai.jaicf.channel.telegram.telegram
-import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.model.Attachments
 import com.vitekkor.compolybot.model.Channel
 import com.vitekkor.compolybot.model.TelegramAttachments
-import com.vitekkor.compolybot.model.telegram.InputMediaPhoto
-import com.vitekkor.compolybot.model.telegram.MediaGroup
 
 fun BotRequest.attachments(): Attachments? {
     if (telegram != null) {
@@ -22,15 +19,6 @@ fun BotRequest.attachments(): Attachments? {
         return TelegramAttachments(photos, video, replyMessage)
     }
     return null
-}
-
-fun Reactions.sendPhotos(photos: List<String>) {
-    if (telegram != null) {
-        val mediaGroup = photos.map {
-            InputMediaPhoto(it)
-        }
-        telegramApiService.sendMediaGroup(checkNotNull(telegram?.request?.chatId), MediaGroup(mediaGroup))
-    }
 }
 
 fun BotRequest.channel(): Channel {

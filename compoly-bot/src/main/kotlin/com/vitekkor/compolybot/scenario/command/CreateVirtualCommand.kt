@@ -16,12 +16,10 @@ import com.vitekkor.compolybot.repository.VirtualCommandRepository
 import com.vitekkor.compolybot.scenario.extension.attachments
 import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.inputText
-import com.vitekkor.compolybot.scenario.extension.sendPhotos
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 @Component
-class VirtualCommand(private val virtualCommandRepository: VirtualCommandRepository) : BaseCommand() {
+class CreateVirtualCommand(private val virtualCommandRepository: VirtualCommandRepository) : BaseCommand() {
     override val name: String = "виртуальнаякоманда"
     override val description: String = "создать виртуальную команду"
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
@@ -75,37 +73,6 @@ class VirtualCommand(private val virtualCommandRepository: VirtualCommandReposit
                 }
             }
         }
-
-        state("listOfVirtualCommands") {
-            activators { commandActivator("списоквиртуальныхкоманд", "список", "virtuallist", "list") }
-            action {
-                val virtualCommands = virtualCommandRepository.findAll().joinToString("\n") {
-                    "/${it.commandName}"
-                }
-                reactions.say("Виртуальные команды:\n$virtualCommands")
-            }
-        }
-
-        state("deleteVirtualCommand") {
-            activators { commandActivator("удалить", "удалитьвиртуальнуюкоманду", "delete", "remove") }
-            action {
-                val commandName = request.inputText().split("\n").first().replace(Regex("^/[^ ]* ?"), "")
-
-                if (commandName.isBlank()) {
-                    reactions.say("Неверные аргументы товарищ")
-                    return@action
-                }
-
-                val virtualCommand = virtualCommandRepository.findByIdOrNull(commandName) ?: kotlin.run {
-                    reactions.say("Такой виртуальной команды не существует, товарищ")
-                    return@action
-                }
-
-                virtualCommandRepository.delete(virtualCommand)
-
-                reactions.say("Удалена виртуальная команда: $commandName")
-            }
-        }
     }
 
     private fun ActionContext<ActivatorContext, BotRequest, Reactions>.processVirtualCommand(virtualCommand: VirtualCommand) {
@@ -114,11 +81,11 @@ class VirtualCommand(private val virtualCommandRepository: VirtualCommandReposit
                 is TelegramAttachments -> {
                     when {
                         attachments.photos != null -> {
-                            reactions.sendPhotos(attachments.photos)
+                            reactions.telegram!!.sendPhoto(attachments.photos.first(), virtualCommand.text)
                         }
 
                         attachments.video != null -> {
-                            reactions.telegram!!.sendVideo(attachments.video)
+                            reactions.telegram!!.sendVideo(attachments.video, caption = virtualCommand.text)
                         }
 
                         attachments.replyMessage != null -> {
