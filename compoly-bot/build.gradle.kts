@@ -18,7 +18,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    // implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")

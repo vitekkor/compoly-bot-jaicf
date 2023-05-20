@@ -21,7 +21,7 @@ class MainScenario(commands: List<BaseCommand>) : Scenario {
         commands.forEach { append(it) }
 
         fallback {
-            reactions.say("Sorry, I didn't get it...")
+            reactions.go("/handleVirtualAction")
         }
     }
 }

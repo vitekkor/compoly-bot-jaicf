@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: compolybot
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/compolyBot
+      auto-index-creation: true
+
 
 bot:
   telegramToken:

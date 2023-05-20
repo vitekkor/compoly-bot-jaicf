@@ -1,5 +1,6 @@
 package com.vitekkor.compolybot.scenario.command
 
+import com.justai.jaicf.activator.regex.RegexActivationRule
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.builder.ActivationRulesBuilder
 import com.justai.jaicf.builder.StateBuilder
@@ -23,7 +24,23 @@ abstract class BaseCommand : Scenario {
     }
 
     companion object {
-        fun ActivationRulesBuilder.commandActivator(vararg commands: String) =
-            regex(commands.joinToString(")|(", prefix = "/((", postfix = ")).*"))
+        fun ActivationRulesBuilder.commandActivator(
+            vararg commands: String,
+            multiLine: Boolean = false
+        ): RegexActivationRule {
+            return regex(commandActivatorRegex(*commands, multiLine = multiLine))
+        }
+
+        fun commandActivatorRegex(
+            vararg commands: String,
+            multiLine: Boolean = false
+        ): Regex {
+            val postfix = if (multiLine) {
+                ")).*(\n.*\n?)*"
+            } else {
+                ")).*"
+            }
+            return commands.joinToString(")|(", prefix = "/((", postfix = postfix).toRegex()
+        }
     }
 }
