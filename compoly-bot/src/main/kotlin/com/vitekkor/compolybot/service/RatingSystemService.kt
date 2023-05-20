@@ -72,4 +72,9 @@ class RatingSystemService(private val ratingRepository: RatingRepository) {
         targetId.rep += baseCount
         return ratingRepository.save(targetId)
     }
+
+    fun subRep(targetId: UserRating): UserRating {
+        targetId.rep -= baseCount
+        return ratingRepository.save(targetId)
+    }
 }
