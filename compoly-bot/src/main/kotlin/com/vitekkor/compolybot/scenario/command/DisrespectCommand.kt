@@ -9,7 +9,7 @@ import com.vitekkor.compolybot.service.RatingSystemService
 import org.springframework.stereotype.Component
 
 @Component
-class DisrespectCommand(private val ratingSystemService: RatingSystemService): BaseCommand() {
+class DisrespectCommand(private val ratingSystemService: RatingSystemService) : BaseCommand() {
     override val name: String = "осуждаю"
     override val description: String = "показать осуждение и понизить репутацию. TIP: /осуждаю ОСУЖДАЕМЫЙ"
 

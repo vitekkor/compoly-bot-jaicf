@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
 
 @Service
-class ApplicationContextProvider: ApplicationContextAware {
+class ApplicationContextProvider : ApplicationContextAware {
 
     companion object {
         lateinit var applicationContext: ApplicationContext
