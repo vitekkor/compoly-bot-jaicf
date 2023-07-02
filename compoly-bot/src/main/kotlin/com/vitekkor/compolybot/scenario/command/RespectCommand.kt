@@ -7,11 +7,15 @@ import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
 import com.vitekkor.compolybot.service.RatingSystemService
 import org.springframework.stereotype.Component
+import java.time.Duration
 
 @Component
 class RespectCommand(private val ratingSystemService: RatingSystemService) : BaseCommand() {
     override val name: String = "одобряю"
     override val description: String = "показать одобрение и повысить репутацию. TIP: /одобряю ОДОБРЯЕМЫЙ"
+    override val coolDown: Duration = Duration.ofHours(1)
+    override val lvlBonus: Int = 0
+    override val coolDownMessage: String = "Партия не рекомендует одобрение других лиц чаще, чем раз в 1 час."
 
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
         activators { commandActivator("одобряю", "респект", "respect") }

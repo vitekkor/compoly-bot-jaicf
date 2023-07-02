@@ -8,11 +8,16 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.springframework.stereotype.Component
+import java.time.Duration
 
 @Component
 class DogsCommand(private val ktorClient: HttpClient) : BaseCommand() {
     override val name: String = "пёсик"
     override val description: String = "ПЁСИКИ!"
+
+    override val coolDown: Duration = Duration.ofHours(4)
+    override val coolDownMessage: String =
+        "Товарищ, ваши пёсики закончились. Обновление запаса пёсиков происходит раз в 4 часа"
 
     private val catApiLink = "https://dog.ceo/api/breeds/image/random"
 

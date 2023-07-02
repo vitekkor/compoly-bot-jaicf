@@ -10,6 +10,7 @@ import com.justai.jaicf.hook.BotHookException
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.reactions.Reactions
+import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
 import com.vitekkor.compolybot.service.CommandCoolDownService
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,8 @@ abstract class BaseCommand : Scenario {
     abstract val description: String
     open val coolDown: Duration = Duration.ofSeconds(-1)
     open val coolDownMessage: String = "Sorry, this command not available now. Try again later."
+    open val baseCommandUsageAmount: Int = 1
+    open val lvlBonus: Int = 1
 
     @Autowired
     private lateinit var coolDownService: CommandCoolDownService
@@ -31,7 +34,7 @@ abstract class BaseCommand : Scenario {
             handle<BeforeActionHook> {
                 if (!state.path.name.endsWith(name)) return@handle
                 if (coolDown.isNegative || coolDown.isZero) return@handle
-                if (!coolDownService.checkCommandCoolDown(name, request.userId, coolDown)) {
+                if (!coolDownService.checkCommandCoolDown(request.chatId, request.userId, this@BaseCommand)) {
                     reactions.say(coolDownMessage)
                     throw BotHookException()
                 }
