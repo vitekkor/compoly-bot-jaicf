@@ -18,7 +18,7 @@ class CatsCommand(private val ktorClient: HttpClient, catApiConfigProperties: Ca
     override val description: String = "КОТИКИ!"
     override val coolDown: Duration = Duration.ofHours(4)
     override val coolDownMessage: String =
-        "Товарищ, ваши котики закончились. Обновление запаса котов происходит раз в 4 часа"
+        "Товарищ, ваши котики закончились. Обновление запаса котов происходит раз в 4 часа."
 
     private val catApiLink = "https://api.thecatapi.com/v1/images/search?api_key=${catApiConfigProperties.apiKey}"
 

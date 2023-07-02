@@ -17,7 +17,7 @@ class DogsCommand(private val ktorClient: HttpClient) : BaseCommand() {
 
     override val coolDown: Duration = Duration.ofHours(4)
     override val coolDownMessage: String =
-        "Товарищ, ваши пёсики закончились. Обновление запаса пёсиков происходит раз в 4 часа"
+        "Товарищ, ваши пёсики закончились. Обновление запаса пёсиков происходит раз в 4 часа."
 
     private val catApiLink = "https://dog.ceo/api/breeds/image/random"
 

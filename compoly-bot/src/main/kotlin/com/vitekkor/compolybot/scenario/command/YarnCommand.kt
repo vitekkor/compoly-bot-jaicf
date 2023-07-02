@@ -16,7 +16,7 @@ class YarnCommand : BaseCommand() {
 
     override val coolDown: Duration = Duration.ofHours(4)
     override val coolDownMessage: String =
-        "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 4 часа"
+        "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 4 часа."
     override val baseCommandUsageAmount: Int = 6
     override val lvlBonus: Int = 2
     private var probability = 0

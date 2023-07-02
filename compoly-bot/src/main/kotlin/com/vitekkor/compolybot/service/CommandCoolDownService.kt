@@ -11,4 +11,6 @@ interface CommandCoolDownService {
         userId: Long,
         command: BaseCommand,
     ): Boolean
+
+    fun getNextAvailabilityTimeOfCommand(userId: Long, command: BaseCommand): Long
 }

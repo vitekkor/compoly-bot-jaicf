@@ -40,4 +40,15 @@ class DefaultCommandCoolDownService(
             ).size < maxUsageAmount
         }
     }
+
+    override fun getNextAvailabilityTimeOfCommand(userId: Long, command: BaseCommand): Long {
+        with(command) {
+            val timestamp = Instant.now().minus(coolDown)
+            return commandCoolDownRepository.findAllByUserIdAndCommandNameAndTimestampIsAfter(
+                userId,
+                name,
+                timestamp
+            ).firstOrNull()?.timestamp?.minusMillis(Instant.now().toEpochMilli())?.epochSecond ?: 0L
+        }
+    }
 }
