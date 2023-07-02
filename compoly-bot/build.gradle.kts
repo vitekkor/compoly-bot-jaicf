@@ -6,6 +6,13 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("plugin.spring") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+}
+
+ktlint {
+    filter {
+        exclude { element -> element.file.path.contains("generated/") }
+    }
 }
 
 val jaicf = "1.3.0"

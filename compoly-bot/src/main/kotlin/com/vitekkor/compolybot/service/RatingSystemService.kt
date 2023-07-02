@@ -77,4 +77,11 @@ class RatingSystemService(private val ratingRepository: RatingRepository) {
         targetId.rep -= baseCount
         return ratingRepository.save(targetId)
     }
+
+    fun getMaxCommandMaxUsageAmount(chatId: Long, userId: Long, levelBonus: Int = 1): Int {
+        val userInfo = getUserInfo(chatId, userId) ?: return 0
+        val level = getUserLvl(userInfo)
+
+        return levelBonus * level.ordinal
+    }
 }
