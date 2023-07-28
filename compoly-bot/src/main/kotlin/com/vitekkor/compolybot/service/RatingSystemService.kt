@@ -2,13 +2,17 @@ package com.vitekkor.compolybot.service
 
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.channel.telegram.telegram
-import com.vitekkor.compolybot.model.UserRating
-import com.vitekkor.compolybot.repository.RatingRepository
+import com.vitekkor.compolybot.model.User
+import com.vitekkor.compolybot.repository.UserRepository
+import com.vitekkor.compolybot.scenario.extension.channel
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class RatingSystemService(private val ratingRepository: RatingRepository) {
+class RatingSystemService(
+    private val userRepository: UserRepository,
+    private val permissionService: PermissionService,
+) {
 
     private val baseCount = 10
 
@@ -51,31 +55,34 @@ class RatingSystemService(private val ratingRepository: RatingRepository) {
             val userId = request.telegram!!.message.from?.id ?: return
             val username = request.telegram!!.message.from?.username
             val chatId = request.telegram!!.chatId
-            val userRating = UserRating(userId, username, chatId, 0)
-            ratingRepository.findByIdOrNull(userRating.id) ?: ratingRepository.save(userRating)
+            val user = User(userId, username, chatId, 0)
+            userRepository.findByIdOrNull(user.id) ?: kotlin.run {
+                permissionService.updateRole(user, request.channel())
+                userRepository.save(user)
+            }
         }
     }
 
-    fun getUserInfo(chatId: Long, username: String): UserRating? {
-        return ratingRepository.findFirstByChatIdAndUsername(chatId, username)
+    fun getUserInfo(chatId: Long, username: String): User? {
+        return userRepository.findFirstByChatIdAndUsername(chatId, username)
     }
 
-    fun getUserInfo(chatId: Long, userId: Long): UserRating? {
-        return ratingRepository.findByIdOrNull("$chatId.$userId")
+    fun getUserInfo(chatId: Long, userId: Long): User? {
+        return userRepository.findByIdOrNull("$chatId.$userId")
     }
 
-    fun getUserLvl(userRating: UserRating): Level {
-        return Level.getLevel(userRating.rep)
+    fun getUserLvl(user: User): Level {
+        return Level.getLevel(user.rep)
     }
 
-    fun addRep(targetId: UserRating): UserRating {
+    fun addRep(targetId: User): User {
         targetId.rep += baseCount
-        return ratingRepository.save(targetId)
+        return userRepository.save(targetId)
     }
 
-    fun subRep(targetId: UserRating): UserRating {
+    fun subRep(targetId: User): User {
         targetId.rep -= baseCount
-        return ratingRepository.save(targetId)
+        return userRepository.save(targetId)
     }
 
     fun getMaxCommandMaxUsageAmount(chatId: Long, userId: Long, levelBonus: Int = 1): Int {
