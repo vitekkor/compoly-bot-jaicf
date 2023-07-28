@@ -1,5 +1,6 @@
 package com.vitekkor.compolybot.scenario.command
 
+import com.justai.jaicf.activator.regex.RegexActivationRule
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.builder.createModel
@@ -17,12 +18,22 @@ import com.vitekkor.compolybot.repository.VirtualCommandRepository
 import com.vitekkor.compolybot.scenario.extension.attachments
 import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.inputText
+import com.vitekkor.compolybot.service.VirtualCommandsService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 @Component
-class CreateVirtualCommand(private val virtualCommandRepository: VirtualCommandRepository) : BaseCommand() {
+class CreateVirtualCommand(
+    private val virtualCommandRepository: VirtualCommandRepository,
+    private val virtualCommandsService: VirtualCommandsService,
+) : BaseCommand() {
     override val name: String = "виртуальнаякоманда"
     override val description: String = "создать виртуальную команду"
+
+    @Autowired
+    @Lazy
+    private lateinit var commands: List<BaseCommand>
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
         val commandRegex =
             commandActivatorRegex("виртуальнаякоманда", "виртуальная_команда", "createvirtual", multiLine = true)
@@ -40,7 +51,18 @@ class CreateVirtualCommand(private val virtualCommandRepository: VirtualCommandR
                 return@action
             }
 
-            // todo isCommonCommandExists
+            val commonCommand = (commands + this@CreateVirtualCommand).find {
+                it.model.transitions.any { transition ->
+                    val regex = (transition.rule as? RegexActivationRule)?.regex
+                        ?.removeSuffix(".*")?.removeSuffix(".*(\n.*\n?)*")
+                    regex?.toRegex()?.matches("/$commandName") ?: false
+                }
+            }
+
+            if (commonCommand != null) {
+                reactions.say("Такая команда уже существует")
+                return@action
+            }
 
             val attachments = request.attachments()
 
@@ -69,9 +91,7 @@ class CreateVirtualCommand(private val virtualCommandRepository: VirtualCommandR
 
         state("handleVirtualAction") {
             action {
-                val virtualCommand = virtualCommandRepository.findAll().find {
-                    "/${it.commandName}".toRegex().matches(request.input) && request.channel() == it.channel
-                }
+                val virtualCommand = virtualCommandsService.findVirtualCommand(request.input, request.channel())
                 virtualCommand?.let {
                     processVirtualCommand(it)
                 }

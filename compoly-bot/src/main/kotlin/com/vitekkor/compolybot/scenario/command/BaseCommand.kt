@@ -7,14 +7,17 @@ import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.builder.createModel
 import com.justai.jaicf.hook.BeforeActionHook
 import com.justai.jaicf.hook.BotHookException
+import com.justai.jaicf.model.activation.disableIf
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.reactions.Reactions
+import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
 import com.vitekkor.compolybot.service.CommandCoolDownService
 import com.vitekkor.compolybot.service.PermissionService
 import com.vitekkor.compolybot.service.RatingSystemService
+import com.vitekkor.compolybot.service.VirtualCommandsService
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 
@@ -36,6 +39,9 @@ abstract class BaseCommand : Scenario {
 
     @Autowired
     private lateinit var ratingSystemService: RatingSystemService
+
+    @Autowired
+    private lateinit var virtualCommandsService: VirtualCommandsService
 
     abstract fun StateBuilder<BotRequest, Reactions>.commandAction()
 
@@ -65,14 +71,16 @@ abstract class BaseCommand : Scenario {
         }
     }
 
-    companion object {
-        fun ActivationRulesBuilder.commandActivator(
-            vararg commands: String,
-            multiLine: Boolean = false
-        ): RegexActivationRule {
-            return regex(commandActivatorRegex(*commands, multiLine = multiLine))
-        }
+    fun ActivationRulesBuilder.commandActivator(
+        vararg commands: String,
+        multiLine: Boolean = false
+    ): RegexActivationRule {
+        return regex(commandActivatorRegex(*commands, multiLine = multiLine)).disableIf {
+            virtualCommandsService.matches(request.input, request.channel())
+        } as RegexActivationRule
+    }
 
+    companion object {
         fun commandActivatorRegex(
             vararg commands: String,
             multiLine: Boolean = false
