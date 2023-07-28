@@ -6,3 +6,4 @@
 
 !**/build/
 /compoly-bot/logs/
+/application-local.yml

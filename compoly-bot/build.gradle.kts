@@ -25,6 +25,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("javax.servlet:javax.servlet-api:4.0.1")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
@@ -44,6 +45,11 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "17"
     }
 }
+
+tasks.withType<Jar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 springBoot {
     mainClass.set("com.vitekkor.compolybot.CompolyBotApplicationKt")
 }
