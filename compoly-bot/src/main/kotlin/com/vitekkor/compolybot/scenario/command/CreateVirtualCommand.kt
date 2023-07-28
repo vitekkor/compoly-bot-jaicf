@@ -7,6 +7,7 @@ import com.justai.jaicf.channel.telegram.TelegramEvent
 import com.justai.jaicf.channel.telegram.telegram
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
+import com.justai.jaicf.hook.BeforeActionHook
 import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.model.TelegramAttachments
@@ -59,6 +60,9 @@ class CreateVirtualCommand(private val virtualCommandRepository: VirtualCommandR
     }
 
     override val model: ScenarioModel = createModel {
+        handle<BeforeActionHook> {
+            preprocess()
+        }
         state(name) {
             commandAction()
         }

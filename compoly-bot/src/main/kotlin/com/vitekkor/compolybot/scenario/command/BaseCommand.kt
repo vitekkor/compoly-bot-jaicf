@@ -13,6 +13,8 @@ import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
 import com.vitekkor.compolybot.service.CommandCoolDownService
+import com.vitekkor.compolybot.service.PermissionService
+import com.vitekkor.compolybot.service.RatingSystemService
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 
@@ -29,20 +31,33 @@ abstract class BaseCommand : Scenario {
     @Autowired
     private lateinit var coolDownService: CommandCoolDownService
 
+    @Autowired
+    private lateinit var permissionService: PermissionService
+
+    @Autowired
+    private lateinit var ratingSystemService: RatingSystemService
+
     abstract fun StateBuilder<BotRequest, Reactions>.commandAction()
+
+    protected fun BeforeActionHook.preprocess() {
+        val user = checkNotNull(ratingSystemService.getUserInfo(request.chatId, request.userId))
+        if (!state.path.name.endsWith(name)) return
+        if (!permissionService.canUseCommand(name, user)) throw BotHookException()
+        if (coolDown.isNegative || coolDown.isZero) return
+        if (!coolDownService.checkCommandCoolDown(request.chatId, request.userId, this@BaseCommand)) {
+            val timeLeft = coolDownService.getNextAvailabilityTimeOfCommand(request.userId, this@BaseCommand)
+            val timeLeftString =
+                String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
+            reactions.say("$coolDownMessage $nextAvailabilityTimeMessage $timeLeftString.")
+            throw BotHookException()
+        }
+        coolDownService.saveCommandUsageInfo(name, request.userId, coolDown)
+    }
 
     override val model: ScenarioModel by lazy {
         createModel {
             handle<BeforeActionHook> {
-                if (!state.path.name.endsWith(name)) return@handle
-                if (coolDown.isNegative || coolDown.isZero) return@handle
-                if (!coolDownService.checkCommandCoolDown(request.chatId, request.userId, this@BaseCommand)) {
-                    val timeLeft = coolDownService.getNextAvailabilityTimeOfCommand(request.userId, this@BaseCommand)
-                    val timeLeftString = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
-                    reactions.say("$coolDownMessage $nextAvailabilityTimeMessage $timeLeftString.")
-                    throw BotHookException()
-                }
-                coolDownService.saveCommandUsageInfo(name, request.userId, coolDown)
+                preprocess()
             }
             state(name) {
                 commandAction()
