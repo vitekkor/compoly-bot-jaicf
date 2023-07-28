@@ -1,0 +1,16 @@
+version: '3'
+services:
+  compoly-bot-service:
+    image: vitekkor/compoly-bot-service:latest
+    volumes:
+      - ./application-local.yml:/etc/vitekkor/compoly-bot/application.yml
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - .mongo:/data/db
