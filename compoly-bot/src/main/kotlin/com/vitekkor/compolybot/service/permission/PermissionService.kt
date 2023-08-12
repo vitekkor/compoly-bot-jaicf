@@ -1,4 +1,4 @@
-package com.vitekkor.compolybot.service
+package com.vitekkor.compolybot.service.permission
 
 import com.vitekkor.compolybot.model.Channel
 import com.vitekkor.compolybot.model.Role

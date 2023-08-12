@@ -18,7 +18,7 @@ import com.vitekkor.compolybot.repository.VirtualCommandRepository
 import com.vitekkor.compolybot.scenario.extension.attachments
 import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.inputText
-import com.vitekkor.compolybot.service.VirtualCommandsService
+import com.vitekkor.compolybot.service.virtualcommand.VirtualCommandsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component

@@ -5,7 +5,7 @@ import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
-import com.vitekkor.compolybot.service.RatingSystemService
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
 import org.springframework.stereotype.Component
 
 @Component

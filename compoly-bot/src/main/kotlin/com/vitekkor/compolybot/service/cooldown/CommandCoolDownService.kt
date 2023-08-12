@@ -1,4 +1,4 @@
-package com.vitekkor.compolybot.service
+package com.vitekkor.compolybot.service.cooldown
 
 import com.vitekkor.compolybot.scenario.command.BaseCommand
 import java.time.Duration

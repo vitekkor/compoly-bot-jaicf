@@ -14,10 +14,10 @@ import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
-import com.vitekkor.compolybot.service.CommandCoolDownService
-import com.vitekkor.compolybot.service.PermissionService
-import com.vitekkor.compolybot.service.RatingSystemService
-import com.vitekkor.compolybot.service.VirtualCommandsService
+import com.vitekkor.compolybot.service.cooldown.CommandCoolDownService
+import com.vitekkor.compolybot.service.permission.PermissionService
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
+import com.vitekkor.compolybot.service.virtualcommand.VirtualCommandsService
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 
