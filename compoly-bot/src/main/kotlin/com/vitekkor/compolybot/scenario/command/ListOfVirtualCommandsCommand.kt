@@ -17,7 +17,7 @@ class ListOfVirtualCommandsCommand(private val virtualCommandRepository: Virtual
             val virtualCommands = virtualCommandRepository.findAll().joinToString("\n") {
                 "/${it.commandName}"
             }
-            reactions.say("Виртуальные команды:\n$virtualCommands")
+            reactions.sayAndDelete("Виртуальные команды:\n$virtualCommands")
         }
     }
 }

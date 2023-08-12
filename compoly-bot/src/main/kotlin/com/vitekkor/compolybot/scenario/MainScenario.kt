@@ -7,7 +7,7 @@ import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.model.scenario.getValue
 import com.vitekkor.compolybot.scenario.command.BaseCommand
-import com.vitekkor.compolybot.service.RatingSystemService
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
 import org.springframework.stereotype.Component
 
 @Component

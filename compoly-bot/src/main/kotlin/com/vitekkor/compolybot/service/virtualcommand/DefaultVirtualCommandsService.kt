@@ -1,4 +1,4 @@
-package com.vitekkor.compolybot.service
+package com.vitekkor.compolybot.service.virtualcommand
 
 import com.vitekkor.compolybot.model.Channel
 import com.vitekkor.compolybot.model.VirtualCommand

@@ -19,18 +19,18 @@ class DeleteVirtualCommandCommand(private val virtualCommandRepository: VirtualC
             val commandName = request.inputText().split("\n").first().replace(Regex("^/[^ ]* ?"), "")
 
             if (commandName.isBlank()) {
-                reactions.say("Неверные аргументы товарищ")
+                reactions.sayAndDelete("Неверные аргументы товарищ")
                 return@action
             }
 
             val virtualCommand = virtualCommandRepository.findByIdOrNull(commandName) ?: kotlin.run {
-                reactions.say("Такой виртуальной команды не существует, товарищ")
+                reactions.sayAndDelete("Такой виртуальной команды не существует, товарищ")
                 return@action
             }
 
             virtualCommandRepository.delete(virtualCommand)
 
-            reactions.say("Удалена виртуальная команда: $commandName")
+            reactions.sayAndDelete("Удалена виртуальная команда: $commandName")
         }
     }
 }

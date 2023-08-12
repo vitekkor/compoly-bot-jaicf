@@ -1,8 +1,9 @@
-package com.vitekkor.compolybot.service
+package com.vitekkor.compolybot.service.cooldown
 
 import com.vitekkor.compolybot.model.CommandCoolDown
 import com.vitekkor.compolybot.repository.CommandCoolDownRepository
 import com.vitekkor.compolybot.scenario.command.BaseCommand
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.Instant

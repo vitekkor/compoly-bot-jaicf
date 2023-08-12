@@ -5,7 +5,7 @@ import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
-import com.vitekkor.compolybot.service.RatingSystemService
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
 import org.springframework.stereotype.Component
 import java.time.Duration
 
@@ -22,28 +22,28 @@ class RespectCommand(private val ratingSystemService: RatingSystemService) : Bas
         action {
             val target = request.input.replace("^/[^ ]* ?".toRegex(), "").trim()
             if (target.isBlank()) {
-                reactions.say("Укажите одобряемого")
+                reactions.sayAndDelete("Укажите одобряемого")
                 return@action
             }
 
             if (target.removePrefix("@") == "hackGPTJAICFbot") {
-                reactions.say("Мы и так знаем, что Вы, Товарищ, одобряете Нас!")
+                reactions.sayAndDelete("Мы и так знаем, что Вы, Товарищ, одобряете Нас!")
                 return@action
             }
 
             val targetId = ratingSystemService.getUserInfo(request.chatId, target.removePrefix("@")) ?: kotlin.run {
-                reactions.say("Этого человека нет в архивах")
+                reactions.sayAndDelete("Этого человека нет в архивах")
                 return@action
             }
 
             if (targetId.userId == request.userId) {
-                reactions.say("Партия рекомендует не удалять рёбра")
+                reactions.sayAndDelete("Партия рекомендует не удалять рёбра")
                 return@action
             }
 
             ratingSystemService.addRep(targetId)
 
-            reactions.say("Одобрение выражено")
+            reactions.sayAndDelete("Одобрение выражено")
         }
     }
 }

@@ -5,7 +5,7 @@ import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.reactions.Reactions
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
-import com.vitekkor.compolybot.service.RatingSystemService
+import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
 import org.springframework.stereotype.Component
 import java.time.Duration
 
@@ -22,28 +22,28 @@ class DisrespectCommand(private val ratingSystemService: RatingSystemService) : 
         action {
             val target = request.input.replace("^/[^ ]* ?".toRegex(), "").trim()
             if (target.isBlank()) {
-                reactions.say("Укажите осуждаемого")
+                reactions.sayAndDelete("Укажите осуждаемого")
                 return@action
             }
 
             if (target.removePrefix("@") == "hackGPTJAICFbot") {
-                reactions.say("Отправляю чёрных воронков")
+                reactions.sayAndDelete("Отправляю чёрных воронков")
                 return@action
             }
 
             val targetId = ratingSystemService.getUserInfo(request.chatId, target.removePrefix("@")) ?: kotlin.run {
-                reactions.say("Этого человека нет в архивах")
+                reactions.sayAndDelete("Этого человека нет в архивах")
                 return@action
             }
 
             if (targetId.userId == request.userId) {
-                reactions.say("Партия рекомендует не удалять рёбра")
+                reactions.sayAndDelete("Партия рекомендует не удалять рёбра")
                 return@action
             }
 
             ratingSystemService.subRep(targetId)
 
-            reactions.say("Осуждение выражено")
+            reactions.sayAndDelete("Осуждение выражено")
         }
     }
 }

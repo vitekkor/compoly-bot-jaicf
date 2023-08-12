@@ -1,4 +1,4 @@
-package com.vitekkor.compolybot.service
+package com.vitekkor.compolybot.service.permission
 
 import com.github.kotlintelegrambot.entities.ChatMember
 import com.github.kotlintelegrambot.network.Response
