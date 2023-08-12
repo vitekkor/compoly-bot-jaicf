@@ -18,7 +18,7 @@ class LvlCommand(private val ratingSystemService: RatingSystemService) : BaseCom
         action {
             val userInfo = ratingSystemService.getUserInfo(request.chatId, request.userId) ?: return@action
             val levelName = ratingSystemService.getUserLvl(userInfo).levelName
-            reactions.say("По архивам Партии, у ${userInfo.username ?: userInfo.userId} уровень $levelName")
+            reactions.sayAndDelete("По архивам Партии, у ${userInfo.username ?: userInfo.userId} уровень $levelName")
         }
     }
 }

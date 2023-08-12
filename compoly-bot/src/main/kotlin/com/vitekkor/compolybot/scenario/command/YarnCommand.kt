@@ -26,7 +26,7 @@ class YarnCommand : BaseCommand() {
         action {
             probability++
             val delay = 3000L
-            reactions.say("Произвожу поиск...")
+            reactions.sayAndDelete("Произвожу поиск...")
             runBlocking {
                 delay(delay)
                 val found = Random.nextInt(0, 500)
@@ -34,7 +34,7 @@ class YarnCommand : BaseCommand() {
                     reactions.say("Товарищ, вы нашли нить! Этот день войдёт в историю.")
                     probability = 0
                 } else {
-                    reactions.say("Нить потеряна")
+                    reactions.sayAndDelete("Нить потеряна")
                 }
             }
         }

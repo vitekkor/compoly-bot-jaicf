@@ -23,7 +23,7 @@ class HelpCommand(
     override fun StateBuilder<BotRequest, Reactions>.commandAction() {
         activators { commandActivator("help", "помощь") }
         action {
-            reactions.say(commandsDescription)
+            reactions.sayAndDelete(commandsDescription)
         }
     }
 }

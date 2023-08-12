@@ -5,15 +5,20 @@ import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.builder.ActivationRulesBuilder
 import com.justai.jaicf.builder.StateBuilder
 import com.justai.jaicf.builder.createModel
+import com.justai.jaicf.channel.telegram.telegram
 import com.justai.jaicf.hook.BeforeActionHook
 import com.justai.jaicf.hook.BotHookException
+import com.justai.jaicf.logging.currentState
 import com.justai.jaicf.model.activation.disableIf
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.reactions.Reactions
+import com.vitekkor.compolybot.model.Channel
+import com.vitekkor.compolybot.model.reaction.CompolySayReaction
 import com.vitekkor.compolybot.scenario.extension.channel
 import com.vitekkor.compolybot.scenario.extension.chatId
 import com.vitekkor.compolybot.scenario.extension.userId
+import com.vitekkor.compolybot.service.autodeletion.AutoDeleteMessagesService
 import com.vitekkor.compolybot.service.cooldown.CommandCoolDownService
 import com.vitekkor.compolybot.service.permission.PermissionService
 import com.vitekkor.compolybot.service.ratingsystem.RatingSystemService
@@ -43,6 +48,9 @@ abstract class BaseCommand : Scenario {
     @Autowired
     private lateinit var virtualCommandsService: VirtualCommandsService
 
+    @Autowired
+    private lateinit var autoDeleteMessagesService: AutoDeleteMessagesService
+
     abstract fun StateBuilder<BotRequest, Reactions>.commandAction()
 
     protected fun BeforeActionHook.preprocess() {
@@ -54,7 +62,7 @@ abstract class BaseCommand : Scenario {
             val timeLeft = coolDownService.getNextAvailabilityTimeOfCommand(request.userId, this@BaseCommand)
             val timeLeftString =
                 String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
-            reactions.say("$coolDownMessage $nextAvailabilityTimeMessage $timeLeftString.")
+            reactions.sayAndDelete("$coolDownMessage $nextAvailabilityTimeMessage $timeLeftString.")
             throw BotHookException()
         }
         coolDownService.saveCommandUsageInfo(name, request.userId, coolDown)
@@ -78,6 +86,20 @@ abstract class BaseCommand : Scenario {
         return regex(commandActivatorRegex(*commands, multiLine = multiLine)).disableIf {
             virtualCommandsService.matches(request.input, request.channel())
         } as RegexActivationRule
+    }
+
+    fun Reactions.sayAndDelete(text: String, delay: Long = 60): CompolySayReaction {
+        return when {
+            telegram != null -> {
+                val chatId = telegram!!.chatId
+                val result = telegram!!.api.sendMessage(chatId, text, null, null, null, null, null)
+                checkNotNull(result.first?.body()?.result) { "Couldn't send message to chat $chatId: ${result.second}" }.let {
+                    CompolySayReaction(text, currentState, it.messageId.toString(), it.chat.id, Channel.TELEGRAM).register()
+                }.also { autoDeleteMessagesService.deleteMessage(it, delay) }
+            }
+
+            else -> error("Unsupported channel")
+        }
     }
 
     companion object {

@@ -12,6 +12,8 @@ spring:
 
 bot:
   telegramToken:
+  auto-delete-messages:
+    fixed-rate: 60_000
 
 cat-api:
   apiKey:

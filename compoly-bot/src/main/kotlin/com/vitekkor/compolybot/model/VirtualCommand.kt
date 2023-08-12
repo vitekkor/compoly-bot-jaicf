@@ -11,5 +11,5 @@ data class VirtualCommand(
 )
 
 enum class Channel {
-    TELEGRAM
+    TELEGRAM, VK
 }

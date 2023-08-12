@@ -47,7 +47,7 @@ class CreateVirtualCommand(
             val commandName = request.inputText().split("\n").first().replace(Regex("^/[^ ]* ?"), "")
 
             if (commandName.isBlank()) {
-                reactions.say("Неверные аргументы товарищ")
+                reactions.sayAndDelete("Неверные аргументы товарищ")
                 return@action
             }
 
@@ -60,7 +60,7 @@ class CreateVirtualCommand(
             }
 
             if (commonCommand != null) {
-                reactions.say("Такая команда уже существует")
+                reactions.sayAndDelete("Такая команда уже существует")
                 return@action
             }
 
@@ -77,7 +77,7 @@ class CreateVirtualCommand(
 
             virtualCommandRepository.save(virtualCommand)
 
-            reactions.say("Добавлена команда: $commandName")
+            reactions.sayAndDelete("Добавлена команда: $commandName")
         }
     }
 
